@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: Do It Simply Reoccuring WooBookings by Week
+Plugin Name: Do It Simply Recurring WooBookings by Week
 Description: WooCommerce Bookings add-on
 Version: 0.1.0
 Author: DO IT SIMPLY LTD
 Author URI: http://doitsimply.co.uk/
-GitHub URI: baperrou/WooBookings-Re-occurring-Booking
+GitHub URI: baperrou/WooBookings-Recurring-Booking
 */
 
 defined( 'ABSPATH' ) or exit;
@@ -21,7 +21,7 @@ define ( 'WCCF_REQUIRED_WC_VERSION', '2.6' );                           // becau
 
 //build the admin page for viewing
 function dis_wc_build_admin() {
-    include('views/dis-wc-reoccurring-admin.php');
+    include('views/dis-wc-recurring-admin.php');
     
 }
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
@@ -29,9 +29,9 @@ include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
 //build menu item under tools to access plugin
 function dis_wc_admin_actions() {
- 	add_submenu_page( 'edit.php?post_type=wc_booking', "Create Reoccurring Bookings", "Create Reoccurring Bookings", 8, "dis-wc-reoccurring-admin", "dis_wc_build_admin");
+ 	add_submenu_page( 'edit.php?post_type=wc_booking', "Create Recurring Bookings", "Create Recurring Bookings", 8, "dis-wc-recurring-admin", "dis_wc_build_admin");
  	//add_submenu_page( 'edit.php?post_type=wc_booking', __( 'Reoccurring Bookings', 'woocommerce-bookings' ), __( 'Reoccurring Bookings', 'woocommerce-bookings' ), 'dis-wc-reoccurring-admin', 'dis_wc_build_admin', 6 );
- 	include('admin/reocurring-bookings-admin.php');
+ 	include('admin/recurring-bookings-admin.php');
 }
  
 add_action('admin_menu', 'dis_wc_admin_actions');
@@ -64,34 +64,6 @@ function wccf_requirements_met () {
     return true ;
 }
 
-/*function wccf_requirements_error () {
-    global $wp_version ;
-
-    require_once( plugin_dir_path ( __FILE__ ) . '/admin/partials/requirements-error.php' ) ;
-}
-
-if ( wccf_requirements_met() ) {
-    require_once( __DIR__ . '/classes/wpps-module.php' );
-    require_once( __DIR__ . '/classes/wordpress-plugin-skeleton.php' );
-    require_once( __DIR__ . '/includes/admin-notice-helper/admin-notice-helper.php' );
-    require_once( __DIR__ . '/classes/wpps-custom-post-type.php' );
-    require_once( __DIR__ . '/classes/wpps-cpt-example.php' );
-    require_once( __DIR__ . '/classes/wpps-settings.php' );
-    require_once( __DIR__ . '/classes/wpps-cron.php' );
-    require_once( __DIR__ . '/classes/wpps-instance-class.php' );
-
-    if ( class_exists( 'WordPress_Plugin_Skeleton' ) ) {
-        $GLOBALS['wccf'] = WordPress_Plugin_Skeleton::get_instance();
-        register_activation_hook(   __FILE__, array( $GLOBALS['wccf'], 'activate' ) );
-        register_deactivation_hook( __FILE__, array( $GLOBALS['wccf'], 'deactivate' ) );
-    }
-} else {
-    add_action( 'admin_notices', 'wccf_requirements_error' );
-}
-*/
-
-
-
 
 
 // Create a product category to allow reoccurring bookings
@@ -99,7 +71,7 @@ if ( wccf_requirements_met() ) {
 function dis_wc_ro_insert_term()
 {
     wp_insert_term(
-      'Re-occurring Booking',
+      'Recurring Booking',
       'product_cat', // the taxonomy
       array(
         'description'=> 'A booking that is repeated for a certain number of weeks.',
@@ -218,3 +190,4 @@ function dis_wc_ro_rb_payment_complete( $order_id ) {
 
 
 add_action( 'woocommerce_payment_complete','dis_wc_ro_rb_payment_complete' );
+

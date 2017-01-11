@@ -14,6 +14,7 @@ function dis_wc_ro_product_addon_export() {
 	//$required is  0 for false and 1 for true
 	$options = array();
 	$required = $_POST['dis_wc_ro_required'];
+	if($required):$required = $required; else:$required ='0'; endif;
 	$cost = absint($_POST['dis_wc_ro_base_cost']);
 	if($_POST['dis_wc_ro_course1']) {
 		$course_1 = $_POST['dis_wc_ro_course1'];
@@ -37,6 +38,14 @@ function dis_wc_ro_product_addon_export() {
 		$cs_length_3 = strlen($course_3.' weeks');
 		$ccs_length_3 = strlen($c_cost_3);
 		$options[] = $c_cost_3;
+
+	}
+	if($_POST['dis_wc_ro_course4']) {
+		$course_4 = $_POST['dis_wc_ro_course4'];
+		$c_cost_4 =absint( ($cost*$course_4)-$cost);
+		$cs_length_4 = strlen($course_4.' weeks');
+		$ccs_length_4 = strlen($c_cost_4);
+		$options[] = $c_cost_4;
 
 	}
 
@@ -67,4 +76,37 @@ function dis_wc_ro_product_addon_export() {
    // exit();
 
 }
+
+
+/*
+	/ will need to create json component to copy and paste into Add-ons
+	a: 1: {
+  i: 0;a: 8: {
+    s: 4: "name";s: 13: "Course Length";s: 11: "description";s: 0: "";s: 4: "type";s: 6: "select";s: 8: "position";i: 0;s: 7: "options";a: 3: {
+      i: 0;a: 4: {
+        s: 5: "label";s: 7: "5 weeks";s: 5: "price";s: 2: "20";s: 3: "min";s: 0: "";s: 3: "max";s: 0: "";
+      }i: 1;a: 4: {
+        s: 5: "label";s: 7: "7 weeks";s: 5: "price";s: 2: "30";s: 3: "min";s: 0: "";s: 3: "max";s: 0: "";
+      }i: 2;a: 4: {
+        s: 5: "label";s: 8: "10 weeks";s: 5: "price";s: 2: "45";s: 3: "min";s: 0: "";s: 3: "max";s: 0: "";
+      }
+    }s: 8: "required";i: 1;s: 32: "wc_booking_person_qty_multiplier";i: 0;s: 31: "wc_booking_block_qty_multiplier";i: 1;
+  }
+}
+ without being required
+
+a: 1: {
+  i: 0;a: 8: {
+    s: 4: "name";s: 13: "Course Length";s: 11: "description";s: 0: "";s: 4: "type";s: 6: "select";s: 8: "position";i: 0;s: 7: "options";a: 3: {
+      i: 0;a: 4: {
+        s: 5: "label";s: 7: "5 weeks";s: 5: "price";s: 2: "20";s: 3: "min";s: 0: "";s: 3: "max";s: 0: "";
+      }i: 1;a: 4: {
+        s: 5: "label";s: 7: "7 weeks";s: 5: "price";s: 2: "30";s: 3: "min";s: 0: "";s: 3: "max";s: 0: "";
+      }i: 2;a: 4: {
+        s: 5: "label";s: 8: "10 weeks";s: 5: "price";s: 2: "45";s: 3: "min";s: 0: "";s: 3: "max";s: 0: "";
+      }
+    }s: 8: "required";i: 0;s: 32: "wc_booking_person_qty_multiplier";i: 0;s: 31: "wc_booking_block_qty_multiplier";i: 1;
+  }
+}
+*/
 

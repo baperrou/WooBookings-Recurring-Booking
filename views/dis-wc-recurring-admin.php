@@ -6,7 +6,7 @@
 </style>
 
 <?php 
-    if($_POST['dis_wc_reoccurring']) {
+    if($_POST['dis_wc_recurring']) {
         $required = $_POST['dis_wc_ro_required'];
         update_option('dis_wc_ro_required', $required);
         
@@ -29,10 +29,10 @@
 ?>
 <div class="wrap">
     <?php    echo "<h2>" . __( 'Create Course Lengths For Products', 'pedal_saledm' ) . "</h2>"; ?>
-     <p>The detail here needs to be copied and pasted into your re-occurring product Add-on</p>
+     <p>The detail here needs to be copied and pasted into your recurring product Add-on</p>
      <p>Inside the product select 'Add-ons' then 'Import', paste and save</p>
     <form name="oscimp_form" method="post" >
-       <input type="hidden" name="dis_wc_reoccurring" value="dis_wc_reoccurring" />
+       <input type="hidden" name="dis_wc_recurring" value="dis_wc_reoccurring" />
        <table>
         	<tr>
 	        	<td colspan="2">
@@ -78,38 +78,4 @@
     <?php echo $add_on_export; ?>
 </div>
 
-
-<?
-/*
-	/ will need to create json component to copy and paste into Add-ons
-	a: 1: {
-  i: 0;a: 8: {
-    s: 4: "name";s: 13: "Course Length";s: 11: "description";s: 0: "";s: 4: "type";s: 6: "select";s: 8: "position";i: 0;s: 7: "options";a: 3: {
-      i: 0;a: 4: {
-        s: 5: "label";s: 7: "5 weeks";s: 5: "price";s: 2: "20";s: 3: "min";s: 0: "";s: 3: "max";s: 0: "";
-      }i: 1;a: 4: {
-        s: 5: "label";s: 7: "7 weeks";s: 5: "price";s: 2: "30";s: 3: "min";s: 0: "";s: 3: "max";s: 0: "";
-      }i: 2;a: 4: {
-        s: 5: "label";s: 8: "10 weeks";s: 5: "price";s: 2: "45";s: 3: "min";s: 0: "";s: 3: "max";s: 0: "";
-      }
-    }s: 8: "required";i: 1;s: 32: "wc_booking_person_qty_multiplier";i: 0;s: 31: "wc_booking_block_qty_multiplier";i: 1;
-  }
-}
- without being required
-
-a: 1: {
-  i: 0;a: 8: {
-    s: 4: "name";s: 13: "Course Length";s: 11: "description";s: 0: "";s: 4: "type";s: 6: "select";s: 8: "position";i: 0;s: 7: "options";a: 3: {
-      i: 0;a: 4: {
-        s: 5: "label";s: 7: "5 weeks";s: 5: "price";s: 2: "20";s: 3: "min";s: 0: "";s: 3: "max";s: 0: "";
-      }i: 1;a: 4: {
-        s: 5: "label";s: 7: "7 weeks";s: 5: "price";s: 2: "30";s: 3: "min";s: 0: "";s: 3: "max";s: 0: "";
-      }i: 2;a: 4: {
-        s: 5: "label";s: 8: "10 weeks";s: 5: "price";s: 2: "45";s: 3: "min";s: 0: "";s: 3: "max";s: 0: "";
-      }
-    }s: 8: "required";i: 0;s: 32: "wc_booking_person_qty_multiplier";i: 0;s: 31: "wc_booking_block_qty_multiplier";i: 1;
-  }
-}
-*/
-?>
 
