@@ -2,7 +2,7 @@
 /*
 Plugin Name: Do It Simply Recurring WooBookings by Week
 Description: WooCommerce Bookings add-on
-Version: 0.1.0
+Version: 0.2.0
 Author: DO IT SIMPLY LTD
 Author URI: http://doitsimply.co.uk/
 GitHub URI: baperrou/WooBookings-Recurring-Booking
@@ -116,13 +116,18 @@ function dis_wc_ro_get_products() {
 	return $product_array;
 
 }
-
+//*UPDATED 18 SEPT 2017 To accommodate latest woocommerce update 3.0 and make recurring happen when any type of payment is made.
 // build the function after payment complete to create reoccurring booking
 function dis_wc_ro_rb_payment_complete( $order_id ) {
 	global $post;
 	//check for reoccurring products 
 	$dis_ro_order = new WC_Order( $order_id );
 	$dis_ro_items  = $dis_ro_order->get_items();
+	$booking= new WC_Booking_Data_Store($order_id);
+	// get all parent ids of all bookings
+	$booking_ids =$booking->get_booking_ids_from_order_id( $order_id );
+	
+	
 	
 	//now loop through the items searching for those that match Reoccurring Products
 	// get the RC products
@@ -130,64 +135,75 @@ function dis_wc_ro_rb_payment_complete( $order_id ) {
 	
 	foreach ($dis_ro_items as $var => $dis_ro_item) {
 		if(in_array($dis_ro_item['product_id'], $dis_ro_included)) { 
-			//build the start time and end time
-			//if not a full day booking then find start time and end time
-			//unnecessary work, available in the get_wc_booking()
-			/*if($dis_ro_item['Booking Time']):
-				$time = $dis_ro_item['Booking Time'];
-				// convert to unix
-				$time= date("H:i", strtotime($time));
-				$start_date = strtotime($dis_ro_item['Booking Date'].''.$time);
-				$end_date = strtotime('+'.$dis_ro_item['Duration'], $date);
-
-				$by_min = true;
-			else:$by_day = true;
-			endif;
-			*/
-			//need the original parent booking idea for reoccurring
-			$parent_id =$dis_ro_item['Booking ID'];
-			
-			//will need the resource id??
-			//will need the add-on type
-			foreach ($dis_ro_item as $key => $dis_ro_item_2) {			
-				 if(strpos($key, 'Length') !== false)  {
-					$course_length = $dis_ro_item[$key];
-					$course_array = preg_split('/\s+/', $course_length);
-					$weeks = $course_array[0];
-				 }
-			 }
-			//?? do I need to force the add-on creation?  Copy and paste code??
-			//use the import/export option format to create for user
-			
-			// get first booking details
-			$prev_booking = get_wc_booking( $parent_id );
+			//now loop through an reoccurring bookiong product
+			foreach($booking_ids as $booking_id) {
+				//build the start time and end time
+				//if not a full day booking then find start time and end time
+				//unnecessary work, available in the get_wc_booking()
+				/*if($dis_ro_item['Booking Time']):
+					$time = $dis_ro_item['Booking Time'];
+					// convert to unix
+					$time= date("H:i", strtotime($time));
+					$start_date = strtotime($dis_ro_item['Booking Date'].''.$time);
+					$end_date = strtotime('+'.$dis_ro_item['Duration'], $date);
 	
-			// Don't want follow ups for follow ups
-			if ( $prev_booking->parent_id <= 0 ) {
-				//need to loop through booking based on number of weeks selected
+					$by_min = true;
+				else:$by_day = true;
+				endif;
+				*/
 				
-				for ($class_length = 1; $class_length  <= ($weeks-1); $class_length++) {
-			    	//need to decide if person option is needed then check if it exisits before useing
+				//need to get the meta data containing weeks (this is a dirty solution because the function 'wc_get_order_item_meta' should have a second parameter)
+				$get_meta_data = wc_get_order_item_meta($var);
 				
-					create_wc_booking( 
-						$prev_booking->product_id, // Creating a booking for the previous bookings product
-						$new_booking_data = array(
-							'start_date'  => strtotime( '+'.$class_length.' week', $prev_booking->start ), // same time, 1 week on
-							'end_date'    => strtotime( '+'.$class_length.' week', $prev_booking->end ), // same time, 1 week on
-							'resource_id' => $prev_booking->resource_id, // same resource
-							'parent_id'   => $parent_id
-						), 
-						$prev_booking->get_status(), // Match previous bookings status
-						false // Not exact, look for a slot
-					);
+
+				//will need the resource id??
+				//will need the add-on type
+				foreach ($get_meta_data as $key => $get_meta) {
+							
+					 if(strpos($key, 'Length') !== false)  {
+						$course_length = $get_meta_data[$key][0];
+						echo $course_length;
+						$course_array = preg_split('/\s+/', $course_length);
+						$weeks = $course_array[0];
+						echo $weeks;
+					 }
+				 }
+				//?? do I need to force the add-on creation?  Copy and paste code??
+				//use the import/export option format to create for user
+				
+				// get first booking details
+				$prev_booking = get_wc_booking( $booking_id );
+		
+				// Don't want follow ups for follow ups
+				if ( $prev_booking->parent_id <= 0 ) {
+					//need to loop through booking based on number of weeks selected
+					
+					for ($class_length = 1; $class_length  <= ($weeks-1); $class_length++) {
+				    	//need to decide if person option is needed then check if it exisits before useing
+					
+						create_wc_booking( 
+							$prev_booking->product_id, // Creating a booking for the previous bookings product
+							$new_booking_data = array(
+								'start_date'  => strtotime( '+'.$class_length.' week', $prev_booking->start ), // same time, 1 week on
+								'end_date'    => strtotime( '+'.$class_length.' week', $prev_booking->end ), // same time, 1 week on
+								'resource_id' => $prev_booking->resource_id, // same resource
+								'parent_id'   => $parent_id
+							), 
+							$prev_booking->get_status(), // Match previous bookings status
+							false // Not exact, look for a slot
+						);
+					}
 				}
+								
 			}
-			
 		}
 	}
 }
 	
 
+/// changed to hook into thank you message to insure booking sent
 
-add_action( 'woocommerce_payment_complete','dis_wc_ro_rb_payment_complete' );
+add_action( 'woocommerce_thankyou','dis_wc_ro_rb_payment_complete' );
+
+//add_action( 'woocommerce_payment_complete','dis_wc_ro_rb_payment_complete' );
 
